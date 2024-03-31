@@ -6,12 +6,15 @@ function Book(title, author, pages, read) {
     this.pages = pages
     this.read = read
     this.info = function () {
-        return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read}`
+        if (this.read === true) {
+            return `${this.title} by ${this.author}, ${this.pages} pages, have read`
+        } else {
+            return `${this.title} by ${this.author}, ${this.pages} pages, haven't read`
+        }
     }
 }
 
-newBook = new Book('Inferno', 'Wick', '100', 'have not read')
-console.log(newBook.info())
+books = document.getElementById('books')
 
 function addBookToLibrary() {
     title = form.elements.title.value
@@ -19,13 +22,52 @@ function addBookToLibrary() {
     pages = form.elements.pages.value
     read = form.elements.read.checked
     myLibrary.push(new Book(title, author, pages, read))
-    console.log(myLibrary)
-    console.log(myLibrary[myLibrary.length - 1].info())
+    form.elements.title.value = ''
+    form.elements.author.value = ''
+    form.elements.pages.value = ''
+    form.elements.read.checked = false
+    displayBooks()
+}
+
+function displayBooks() {
+    books.innerHTML = ''
+    for (let i = 0; i < myLibrary.length; i++) {
+        if (myLibrary[i].read === true) {
+            books.innerHTML += `<div class="card">
+        <p>${myLibrary[i].info()}</p> 
+        <button class="removeButton" data-attribute="${i}">Remove</button>
+        <button class="readButton" data-attribute="${i}">Have Read</button>
+        </div>`
+        } else {
+            books.innerHTML += `<div class="card">
+        <p>${myLibrary[i].info()}</p> 
+        <button class="removeButton" data-attribute="${i}">Remove</button>
+        <button class="readButton" data-attribute="${i}">Haven't Read</button>
+        </div>`
+        }
+
+    }
+    removeButton = document.querySelectorAll('.removeButton')
+    removeButton.forEach(button => button.addEventListener('click', (e) => {
+        console.log(e.target.dataset.attribute)
+        myLibrary.splice(e.target.dataset.attribute, 1)
+        displayBooks()
+    }))
+
+    readButton = document.querySelectorAll('.readButton')
+    readButton.forEach(button => button.addEventListener('click', (e) => {
+        myLibrary[e.target.dataset.attribute].read = !myLibrary[e.target.dataset.attribute].read
+        displayBooks()
+    }))
 }
 
 form = document.getElementById('form')
-console.log(form)
 form.addEventListener('submit', (e) => {
     e.preventDefault()
     addBookToLibrary()
 })
+
+
+
+
+

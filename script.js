@@ -36,8 +36,6 @@ class Gui {
             this.addBook(this.library)
             this.clearForm()
             this.displayBooks(this.library)
-            this.handleRemoveButton(this.library)
-            this.handleReadButton(this.library)
         })
     }
 
@@ -62,11 +60,27 @@ class Gui {
             this.books.innerHTML += `<div class="card">
         <p>${library.books[i].info()}</p> 
         <button class="removeButton" data-attribute="${i}">Remove</button>
-        <button class="readButton" data-attribute="${i}">Have Read</button>
         </div>`
         }
+        this.addReadButton(library)
         this.handleRemoveButton(library)
         this.handleReadButton(library)
+    }
+
+    addReadButton(library) {
+        const cards = document.querySelectorAll('.card')
+        const readButtons = (index) => {
+            const readButton = document.createElement('button')
+            if (library.books[index].read === true) {
+                readButton.textContent = 'Unread'
+            } else {
+                readButton.textContent = 'Read'
+            }
+            readButton.classList.add('readButton')
+            readButton.dataset.attribute = index
+            return readButton
+        }
+        cards.forEach((card, index) => card.appendChild(readButtons(index)))
     }
 
     handleRemoveButton(library) {

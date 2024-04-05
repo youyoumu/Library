@@ -36,6 +36,7 @@ class Gui {
             this.addBook(this.library)
             this.clearForm()
             this.displayBooks(this.library)
+            this.handleRemoveButton(this.library)
         })
     }
 
@@ -63,6 +64,16 @@ class Gui {
         <button class="readButton" data-attribute="${i}">Have Read</button>
         </div>`
         }
+    }
+
+    handleRemoveButton(library) {
+        const removeButton = document.querySelectorAll('.removeButton')
+        removeButton.forEach(button => button.addEventListener('click', (e) => {
+            console.log(e.target.dataset.attribute)
+            library.books.splice(e.target.dataset.attribute, 1)
+            this.displayBooks(library)
+            this.handleRemoveButton(library)
+        }))
     }
 }
 
